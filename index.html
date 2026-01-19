@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Flyer Apresiasi - MIS Hidayatul Mubtadiin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Sketsa Ramadhan';
+            src: url('https://fonts.cdnfonts.com/s/85271/Sketsa Ramadhan.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .control-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .control-group {
+            margin-bottom: 12px;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-group input,
+        .control-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .control-group input:focus,
+        .control-group select:focus {
+            outline: none;
+            border-color: #1a6b52;
+            box-shadow: 0 0 0 3px rgba(26, 107, 82, 0.1);
+        }
+
+        /* Theme Buttons */
+        .theme-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .theme-btn {
+            flex: 1;
+            padding: 10px 8px;
+            border: 3px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .theme-btn.active {
+            border-color: #333;
+            transform: scale(1.05);
+        }
+
+        .theme-green {
+            background: linear-gradient(135deg, #1a6b52, #2d8a6e);
+        }
+
+        .theme-blue {
+            background: linear-gradient(135deg, #1e3a5f, #2e5a8f);
+        }
+
+        .theme-maroon {
+            background: linear-gradient(135deg, #6b1a3a, #8a2d4e);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #4caf50, #388e3c);
+            color: white;
+        }
+
+        .reset-bg-btn {
+            background: linear-gradient(135deg, #9e9e9e, #757575);
+            color: white;
+            flex: 0.5;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        #bgUpload {
+            display: none;
+        }
+
+        /* FLYER STYLES */
+        .flyer-wrapper {
+            position: relative;
+        }
+
+        .flyer {
+            width: 100%;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9f0 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .flyer-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        /* Theme Variables */
+        .flyer.theme-green-active {
+            --primary: #1a6b52;
+            --primary-dark: #0d4a3a;
+            --primary-light: #2d8a6e;
+            --accent: #c9a227;
+            --accent-light: #e8d48b;
+        }
+
+        .flyer.theme-blue-active {
+            --primary: #1e3a5f;
+            --primary-dark: #0f1f35;
+            --primary-light: #2e5a8f;
+            --accent: #ffd700;
+            --accent-light: #ffe44d;
+        }
+
+        .flyer.theme-maroon-active {
+            --primary: #6b1a3a;
+            --primary-dark: #4a1228;
+            --primary-light: #8a2d4e;
+            --accent: #d4af37;
+            --accent-light: #e8c84b;
+        }
+
+        /* Top Border */
+        .top-border {
+            height: 12px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light), var(--accent), var(--accent-light), var(--accent));
+            position: relative;
+        }
+
+        .top-border::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 16px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20'%3E%3Cpath d='M0,20 Q25,0 50,20 Q75,0 100,20' fill='%23ffffff'/%3E%3C/svg%3E") repeat-x;
+            background-size: 50px 16px;
+        }
+
+        /* Decorative Elements */
+        .ornament-left, .ornament-right {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .ornament-left {
+            top: 50px;
+            left: -5px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='none' stroke='%23000' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%23000' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='25' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E");
+        }
+
+        .ornament-right {
+            top: 50px;
+            right: -5px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='none' stroke='%23000' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%23000' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='25' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E");
+        }
+
+        .content {
+            padding: 20px 18px 18px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header Section - Logo beside name */
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+            border-radius: 50%;
+            padding: 4px;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+
+        .school-info {
+            text-align: left;
+        }
+
+        .school-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+
+        .school-address {
+            font-size: 16px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        /* Congratulation Title */
+        .congrats-title {
+            font-size: 14px;
+            color: var(--primary);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        /* Name Card */
+        .name-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 12px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .name-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M30,5 L35,25 L55,30 L35,35 L30,55 L25,35 L5,30 L25,25 Z' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
+            background-size: 60px 60px;
+        }
+
+        .name-card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .ananda-label {
+            font-size: 14px;
+            color: var(--accent-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .student-name {
+            font-family: 'Sketsa Ramadhan';
+            font-size: 38px;
+            font-weight: 400;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 8px;
+            min-height: 32px;
+        }
+
+        .student-class {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: var(--primary-dark);
+            padding: 4px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Achievement Section */
+        .achievement {
+            background: linear-gradient(135deg, #f8f4e8 0%, #fff9e6 100%);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .achievement-label {
+            font-size: 14px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .surah-names {
+            font-family: 'Amiri', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            min-height: 24px;
+        }
+
+        .quran-icon {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        /* Doa Section */
+        .doa {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            font-style: italic;
+            margin: 12px 0;
+            padding: 0 8px;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        .divider-star {
+            color: var(--accent);
+            margin: 0 10px;
+            font-size: 12px;
+        }
+
+        /* Teacher Section */
+        .teacher-section {
+            margin-top: 8px;
+        }
+
+        .teacher-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .teacher-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+
+        /* Bottom Border */
+        .bottom-border {
+            height: 10px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--primary), var(--primary-light), var(--primary));
+            position: relative;
+        }
+
+        .bottom-border::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 0;
+            right: 0;
+            height: 16px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20'%3E%3Cpath d='M0,0 Q25,20 50,0 Q75,20 100,0' fill='%23f8f9f0'/%3E%3C/svg%3E") repeat-x;
+            background-size: 50px 16px;
+        }
+
+        /* Sparkle Animation */
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .sparkle {
+            position: absolute;
+            color: var(--accent);
+            animation: sparkle 2s ease-in-out infinite;
+            z-index: 3;
+            font-size: 10px;
+        }
+
+        .sparkle:nth-child(1) { top: 70px; left: 15px; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 100px; right: 20px; animation-delay: 0.5s; }
+        .sparkle:nth-child(3) { bottom: 80px; left: 25px; animation-delay: 1s; }
+        .sparkle:nth-child(4) { bottom: 60px; right: 15px; animation-delay: 1.5s; }
+
+        /* Loading overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 360px) {
+            .student-name {
+                font-size: 20px;
+            }
+            .school-name {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="control-title">⚙️ Generator Flyer Apresiasi Hafalan</div>
+            
+            <div class="control-group">
+                <label>Nama Siswa</label>
+                <input type="text" id="inputName" placeholder="Masukkan nama siswa..." value="Muhammad Abdullah Al Amin">
+            </div>
+
+            <div class="control-group">
+                <label>Kelas</label>
+                <select id="inputClass">
+                    <option value="4A">Kelas 4A</option>
+                    <option value="4B">Kelas 4B</option>
+                    <option value="5A">Kelas 5A</option>
+                    <option value="5B">Kelas 5B</option>
+                    <option value="6A" selected>Kelas 6A</option>
+                    <option value="6B">Kelas 6B</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Nama Surah yang Dihafal</label>
+                <input type="text" id="inputSurah" placeholder="Contoh: Al-Waqi'ah, Yasin" value="Surah Al-Waqi'ah & Yasin">
+            </div>
+
+            <div class="control-group">
+                <label>Pilih Tema</label>
+                <div class="theme-buttons">
+                    <button class="theme-btn theme-green active" onclick="changeTheme('green')">🌿 Hijau</button>
+                    <button class="theme-btn theme-blue" onclick="changeTheme('blue')">🌙 Biru</button>
+                    <button class="theme-btn theme-maroon" onclick="changeTheme('maroon')">🕌 Marun</button>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <input type="file" id="bgUpload" accept="image/*">
+                <button class="action-btn upload-btn" onclick="document.getElementById('bgUpload').click()">
+                    📷 Upload BG
+                </button>
+                <button class="action-btn reset-bg-btn" onclick="resetBackground()">
+                    🔄
+                </button>
+                <button class="action-btn download-btn" onclick="downloadFlyer()">
+                    📥 Download
+                </button>
+            </div>
+        </div>
+
+        <!-- Flyer -->
+        <div class="flyer-wrapper">
+            <div class="flyer theme-green-active" id="flyer">
+                <div class="flyer-bg" id="flyerBg"></div>
+                <div class="top-border"></div>
+                
+                <div class="ornament-left"></div>
+                <div class="ornament-right"></div>
+                
+                <span class="sparkle">✦</span>
+                <span class="sparkle">✦</span>
+                <span class="sparkle">✦</span>
+                <span class="sparkle">✦</span>
+                
+                <div class="content">
+                    <!-- Header Section - Logo beside name -->
+                    <div class="header-section">
+                        <img src="https://iili.io/fXljUa1.png" alt="Logo MIS" class="logo" crossorigin="anonymous">
+                        <div class="school-info">
+                            <div class="school-name">MIS Hidayatul Mubtadiin</div>
+                            <div class="school-address">Undaan Kidul Kudus</div>
+                        </div>
+                    </div>
+
+                    <!-- Congratulation Title -->
+                    <div class="congrats-title">
+                        Mengucapkan Selamat dan Memberikan<br>Apresiasi Kepada:
+                    </div>
+
+                    <!-- Name Card -->
+                    <div class="name-card">
+                        <div class="name-card-content">
+                            <div class="ananda-label">✨ Ananda ✨</div>
+                            <div class="student-name" id="displayName">Muhammad Abdullah Al Amin</div>
+                            <div class="student-class" id="displayClass">Kelas 6A</div>
+                        </div>
+                    </div>
+
+                    <!-- Achievement -->
+                    <div class="achievement">
+                        <div class="quran-icon">📖</div>
+                        <div class="achievement-label">Telah Menyelesaikan Hafalan</div>
+                        <div class="surah-names" id="displaySurah">Surah Al-Waqi'ah & Yasin</div>
+                    </div>
+
+                    <!-- Doa -->
+                    <div class="doa">
+                        "Semoga ilmunya bermanfaat dunia akhirat dan menjadi motivasi bagi teman-teman yang lainnya."
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="divider">
+                        <div class="divider-line"></div>
+                        <div class="divider-star">☪</div>
+                        <div class="divider-line"></div>
+                    </div>
+
+                    <!-- Teacher Section -->
+                    <div class="teacher-section">
+                        <div class="teacher-label">Guru Pembimbing</div>
+                        <div class="teacher-name">M. Yusni</div>
+                    </div>
+                </div>
+
+                <div class="bottom-border"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+        // Real-time update functions
+        const inputName = document.getElementById('inputName');
+        const inputClass = document.getElementById('inputClass');
+        const inputSurah = document.getElementById('inputSurah');
+        const displayName = document.getElementById('displayName');
+        const displayClass = document.getElementById('displayClass');
+        const displaySurah = document.getElementById('displaySurah');
+        const flyer = document.getElementById('flyer');
+        const flyerBg = document.getElementById('flyerBg');
+        const bgUpload = document.getElementById('bgUpload');
+
+        // Update name in real-time
+        inputName.addEventListener('input', function() {
+            displayName.textContent = this.value || 'Nama Siswa';
+        });
+
+        // Update class in real-time
+        inputClass.addEventListener('change', function() {
+            displayClass.textContent = 'Kelas ' + this.value;
+        });
+
+        // Update surah in real-time
+        inputSurah.addEventListener('input', function() {
+            displaySurah.textContent = this.value || 'Nama Surah';
+        });
+
+        // Change theme function
+        function changeTheme(theme) {
+            // Remove all theme classes
+            flyer.classList.remove('theme-green-active', 'theme-blue-active', 'theme-maroon-active');
+            
+            // Add selected theme class
+            flyer.classList.add('theme-' + theme + '-active');
+            
+            // Update button states
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.theme-' + theme).classList.add('active');
+        }
+
+        // Background upload handler
+        bgUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    flyerBg.style.backgroundImage = `url(${event.target.result})`;
+                    flyerBg.style.opacity = '0.2';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Reset background
+        function resetBackground() {
+            flyerBg.style.backgroundImage = 'none';
+            bgUpload.value = '';
+        }
+
+        // Download flyer as image
+        async function downloadFlyer() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.add('show');
+
+            try {
+                // Hide sparkles temporarily for cleaner export
+                const sparkles = document.querySelectorAll('.sparkle');
+                sparkles.forEach(s => s.style.display = 'none');
+
+                const canvas = await html2canvas(flyer, {
+                    scale: 3,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    logging: false
+                });
+
+                // Show sparkles again
+                sparkles.forEach(s => s.style.display = 'block');
+
+                // Create download link
+                const link = document.createElement('a');
+                const studentName = inputName.value.replace(/\s+/g, '_') || 'siswa';
+                link.download = `Apresiasi_Hafalan_${studentName}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+
+            } catch (error) {
+                console.error('Error generating image:', error);
+                alert('Gagal mengunduh gambar. Silakan coba lagi.');
+            } finally {
+                loadingOverlay.classList.remove('show');
+            }
+        }
+    </script>
+</body>
+</html>
